@@ -4,14 +4,14 @@ namespace ConsoleApp1
 {
     class Program
     {
-		public struct N{
-			public int h; //키
-			public long c; //카운트
-			public N(int h, long c){ //구조체
-				this.h = h;
-				this.c = c;
-			}
+	public struct N{
+		public int h; //키
+		public long c; //카운트
+		public N(int h, long c){ //구조체
+			this.h = h;
+			this.c = c;
 		}
+	}
     	static void Main(string[] args)
     	{
 			//bj3015 /p5 /오아시스 재결합 /240129
