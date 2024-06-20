@@ -18,7 +18,11 @@ class Program {
 		StreamWriter sw = new StreamWriter(Console.OpenStandardOutput());
 		StreamReader sr = new StreamReader(Console.OpenStandardInput());
 		int even; //짝수를 담을 변수
+		int t1; //골드바흐 파티션 확인용 변수
+		int t2; //위와 같음
 		int T = int.Parse(sr.ReadLine()); //테스트 개수
+        
+        /*에라토스테네스의 체*/
 		//소수를 담을 배열 생성
 		//int배열은 할당하지 않으면 0으로 초기화 된다.
 		int[] arr = new int[10001]; //0이 소수, 1이 합성수가 됨
@@ -30,16 +34,16 @@ class Program {
 			//지워진 수가 아니라면 i의 배수부터 출발하여 모든 배수를 지움
 			for(int j = i*2; j < 10001; j += i) arr[j] = 1;
 		}
-		
+		/*골드바흐 추측 연산*/
 		//연산, 출력
 		for(int i = 0; i < T; i++){
 			even = int.Parse(sr.ReadLine());
 			//짝수의 절반값 부터 -- 감소하여 탐색
 			for(int j = even/2; j > 1; j--){ //2까지 탐색
-				int temp1 = j; //소수일까?
-				int temp2 = even - j; //두번째 값도? 
-				if(arr[temp1] == 0 && arr[temp2] == 0){ //소수라면?
-					sw.WriteLine($"{temp1} {temp2}"); //출력하고
+				t1 = j; //소수일까?
+				t2 = even - j; //두번째 값도? 
+				if(arr[t1] == 0 && arr[t2] == 0){ //소수라면?
+					sw.WriteLine($"{t1} {t2}"); //출력하고
 					break; //나간다. 
 				}
 			}
