@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic;
 using System;
 using System.Linq;
 
@@ -12,14 +13,16 @@ class Program
         // 위에는 1 3 6이 될 것이고 
         // 아래를 계산할 때, 첫번째는 5, 두번째가 12인데 12를 어떻게 셈하느냐
         //1 + 2 + 4 + 5 = 12가 나와야하는데 
-        //
-        //
+        //왼쪽합과 위의 합을 더하고, 왼쪽 위 대각선의 합을 빼고(이미 더한 부분이니까 뺀다)
+        //그 자리에 입력된 값을 더하면 된다.
 
         //입출력용 스트림
         using var sr = new StreamReader(new BufferedStream(Console.OpenStandardInput()));
         using var sw = new StreamWriter(new BufferedStream(Console.OpenStandardOutput()));
 
-        // 2차원 구간 합 배열을 선언합니다. 배열의 크기는 최대 1025 x 1025입니다.
+        // 2차원 구간 합 배열을 선언합니다. 
+        //N의 크기가 1024까지인데, 연산이 편하도록 크기를 1씩 넓혔음.
+        //구간합 배열 연산중에 범위 예외처리를 하지 않아도 되고, 좌표가 1부터 시작되니 쉽게 처리 가능
         int[,] p_sum = new int[1025, 1025];
 
         // 첫 번째 입력 줄을 읽어 N과 M을 추출합니다.
@@ -31,7 +34,7 @@ class Program
         for (int i = 1; i <= N; i++)
         {
             // 행렬의 각 행을 읽습니다.
-            var line = sr.ReadLine().Split().Select(int.Parse).ToArray();
+            var line = Array.ConvertAll(sr.ReadLine().Split(), int.Parse);
             for (int j = 1; j <= N; j++)
             {
                 // 구간 합 배열을 계산합니다.
@@ -47,7 +50,7 @@ class Program
         for (int i = 0; i < M; i++)
         {
             // 각 쿼리를 읽습니다.
-            var query = sr.ReadLine().Split().Select(int.Parse).ToArray();
+            var query = Array.ConvertAll(sr.ReadLine().Split(), int.Parse);
             int y1 = query[0], x1 = query[1], y2 = query[2], x2 = query[3];
 
             // 구간 합을 계산합니다.
