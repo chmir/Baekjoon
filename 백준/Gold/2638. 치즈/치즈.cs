@@ -13,24 +13,16 @@ public class Program
     static int[] dx = { 0, 0, -1, 1 };
     static int N, M, time;
 
-    static int[,] arr = new int[101, 101];
-    static int[,] visit = new int[101, 101];
+    static int[,] arr;
+    static bool[,] visit;
 
-    // 치즈 내, 외부 구분하는 함수
     static void FillBlank()
     {
-        // visit 초기화
-        for (int i = 0; i < N; i++)
-        {
-            for (int j = 0; j < M; j++)
-            {
-                visit[i, j] = 0;
-            }
-        }
+        Array.Clear(visit, 0, visit.Length);
 
-        Queue<Tuple<int, int>> q = new Queue<Tuple<int, int>>();
-        q.Enqueue(Tuple.Create(0, 0));
-        visit[0, 0] = 1;
+        Queue<(int, int)> q = new Queue<(int, int)>();
+        q.Enqueue((0, 0));
+        visit[0, 0] = true;
 
         while (q.Count > 0)
         {
@@ -40,11 +32,11 @@ public class Program
             {
                 int ty = y + dy[i];
                 int tx = x + dx[i];
-                if (ty >= 0 && tx >= 0 && ty < N && tx < M && visit[ty, tx] == 0 && arr[ty, tx] != CHEESE)
+                if (ty >= 0 && tx >= 0 && ty < N && tx < M && !visit[ty, tx] && arr[ty, tx] != CHEESE)
                 {
-                    visit[ty, tx] = 1;
+                    visit[ty, tx] = true;
                     arr[ty, tx] = REAL_BLANK;
-                    q.Enqueue(Tuple.Create(ty, tx));
+                    q.Enqueue((ty, tx));
                 }
             }
         }
@@ -52,68 +44,51 @@ public class Program
 
     static void Simulation()
     {
-        bool flag = false;
-        // 모든 칸을 다 살펴본다.
+        bool cheeseExists;
         while (true)
         {
-            // (1) 치즈 내, 외부 구분시키기
             FillBlank();
 
-            // (2) 모든 치즈 칸들을 대상으로 녹을 수 있는지 확인하기
-            flag = false;
+            cheeseExists = false;
             for (int i = 0; i < N; i++)
             {
                 for (int j = 0; j < M; j++)
                 {
-                    // 해당 칸이 치즈일 경우
                     if (arr[i, j] == CHEESE)
                     {
                         int cnt = 0;
-                        // 그 칸의 상,하,좌,우를 살펴보고 최소 2칸이 REAL_BLANK인지 확인
                         for (int k = 0; k < 4; k++)
                         {
                             int ty = i + dy[k];
                             int tx = j + dx[k];
                             if (ty >= 0 && tx >= 0 && ty < N && tx < M && arr[ty, tx] == REAL_BLANK)
                             {
-                                flag = true;
                                 cnt++;
                             }
                         }
-                        if (cnt >= 2) arr[i, j] = MELT; // 녹는 대상으로 표기
-                    }
-                }
-            }
-
-            // (3) 녹는 대상으로 표기된 적이 있을 경우 외부 공기로 바꾸기
-            if (flag)
-            {
-                for (int i = 0; i < N; i++)
-                {
-                    for (int j = 0; j < M; j++)
-                    {
-                        if (arr[i, j] == MELT)
+                        if (cnt >= 2)
                         {
-                            arr[i, j] = REAL_BLANK;
+                            arr[i, j] = MELT;
+                            cheeseExists = true;
                         }
                     }
                 }
             }
-            time++;
 
-            flag = false;
-            // 치즈가 남아있는지 재검사
+            if (!cheeseExists) break;
+
             for (int i = 0; i < N; i++)
             {
                 for (int j = 0; j < M; j++)
                 {
-                    if (arr[i, j] == CHEESE)
+                    if (arr[i, j] == MELT)
                     {
-                        flag = true;
+                        arr[i, j] = BLANK;
                     }
                 }
             }
-            if (!flag) break;
+
+            time++;
         }
     }
 
@@ -122,6 +97,9 @@ public class Program
         var Line = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
         N = Line[0];
         M = Line[1];
+
+        arr = new int[N, M];
+        visit = new bool[N, M];
 
         for (int i = 0; i < N; i++)
         {
