@@ -119,16 +119,13 @@ public class Program
 
     public static void Main()
     {
-        using var sr = new StreamReader(new BufferedStream(Console.OpenStandardInput()));
-        using var sw = new StreamWriter(new BufferedStream(Console.OpenStandardOutput()));
-
-        var Line = Array.ConvertAll(sr.ReadLine().Split(), int.Parse);
+        var Line = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
         N = Line[0];
         M = Line[1];
 
         for (int i = 0; i < N; i++)
         {
-            Line = Array.ConvertAll(sr.ReadLine().Split(), int.Parse);
+            Line = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
             for (int j = 0; j < M; j++)
             {
                 arr[i, j] = Line[j];
@@ -136,10 +133,6 @@ public class Program
         }
 
         Simulation();
-        sw.WriteLine(time);
-
-        sr.Close();
-        sw.Flush();
-        sw.Close();
+        Console.WriteLine(time);
     }
 }
