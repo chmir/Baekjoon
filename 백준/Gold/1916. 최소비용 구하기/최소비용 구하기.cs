@@ -9,7 +9,7 @@ class MainClass
         // 입력받기: 노드 수 n과 간선 수 m
         int n = int.Parse(Console.ReadLine());
         int m = int.Parse(Console.ReadLine());
-        
+
         // 그래프 초기화: 노드 번호가 1부터 시작하므로 n+1 크기로 배열 생성
         List<(int, int)>[] graph = new List<(int, int)>[n + 1];
         for (int i = 1; i <= n; i++)
