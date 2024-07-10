@@ -2,6 +2,12 @@ using System;
 
 class Program
 {
+    // bj1064 /s4 /평행사변형 /240710
+    // 이 프로그램은 주어진 세 점을 이용해 평행사변형을 만들 수 있는지 확인하고,
+    // 평행사변형을 만들 수 있다면 가장 큰 둘레와 가장 작은 둘레의 차이를 계산합니다.
+    // 세 점이 동일한 직선상에 있거나 평행사변형을 만들 수 없는 경우 -1을 출력합니다.
+    // 복습필요
+
     static void Main()
     {
         // 입력 값을 받아 각 변수에 할당
@@ -18,12 +24,15 @@ class Program
         // 세 점이 동일한 직선상에 있는지 확인
         if (XA == XB && XB == XC || YA == YB && YB == YC)
         {
+            // 모든 x좌표 또는 y좌표가 동일하면 동일한 직선상에 존재
             answer = -1.0;
         }
         else if ((YA - YB != 0) && (YA - YC != 0) && (YB - YC != 0) &&
                  (double)(XA - XB) / (YA - YB) == (double)(XB - XC) / (YB - YC) &&
                  (double)(XB - XC) / (YB - YC) == (double)(XA - XC) / (YA - YC))
         {
+            // 세 점이 직선상에 존재하는지 확인
+            // 기울기를 비교하여 세 점이 동일한 직선상에 있는 경우를 확인
             answer = -1.0;
         }
         else
