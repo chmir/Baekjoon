@@ -48,7 +48,7 @@ class Program
     {
         n = int.Parse(Console.ReadLine());  // 사용자로부터 블록의 개수 입력 받음
         arr = Console.ReadLine().Split().Select(int.Parse).ToArray();  // 블록의 높이 입력 받음
-        dp = new int[52, 500005];  // dp 배열 초기화
+        dp = new int[51, 500001];  // dp 배열 초기화
 
         int ans = Dpf(0, 0);  // 동적 프로그래밍 함수 호출
 
