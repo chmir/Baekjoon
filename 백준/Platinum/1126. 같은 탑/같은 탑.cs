@@ -34,17 +34,11 @@ class Program
 
                 // 현재 블록을 더 높은 탑에 추가
                 int highIndex = j + blocks[i]; // 새 높이차이는 j + block
-                if (highIndex < 500001)
-                {
-                    dp[1, highIndex] = Math.Max(dp[1, highIndex], dp[0, j] + blocks[i]);
-                }
+                if (highIndex < 500001) dp[1, highIndex] = Math.Max(dp[1, highIndex], dp[0, j] + blocks[i]);
 
                 // 현재 블록을 더 낮은 탑에 추가하거나 기존 탑 높이를 조정
                 int lowIndex = Math.Abs(j - blocks[i]); // 새 높이차이는 |j - block|
-                if (lowIndex < 500001)
-                {
-                    dp[1, lowIndex] = Math.Max(dp[1, lowIndex], dp[0, j] + (j < blocks[i] ? blocks[i] - j : 0));
-                }
+                if (lowIndex < 500001) dp[1, lowIndex] = Math.Max(dp[1, lowIndex], dp[0, j] + (j < blocks[i] ? blocks[i] - j : 0));
 
                 // 현재 상태를 유지하고 블록을 추가하지 않는 경우
                 dp[1, j] = Math.Max(dp[1, j], dp[0, j]);
