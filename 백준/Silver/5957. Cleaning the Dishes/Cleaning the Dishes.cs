@@ -20,13 +20,16 @@ class Program
         //그리고 아마도 문제에서는 일부러 틀린 케이스가 나오지 않는다고 가정하는 거 같다.
         //그래서 스택이 비어있는지 예외처리를 하지 않았습니다.
 
+        //빠른입출력
+        StreamReader sr = new StreamReader(new BufferedStream(Console.OpenStandardInput()));
+        StreamWriter sw = new StreamWriter(new BufferedStream(Console.OpenStandardOutput()));
         // 스택 생성
         Stack<int> s1 = new Stack<int>(); //안씻긴 거
         Stack<int> s2 = new Stack<int>(); //씻기고, 안말린거
         Stack<int> s3 = new Stack<int>(); //씻기고, 말린거 
 
         // 첫 줄에서 N 값을 읽음
-        int N = int.Parse(Console.ReadLine());
+        int N = int.Parse(sr.ReadLine());
 
         // 더러운 접시 스택 초기화
         for (int i = N; i >= 1; i--)
@@ -34,19 +37,23 @@ class Program
             s1.Push(i); //맨 위에는 1이 있게 된다.
         }
 
-        // 명령어 입력 및 처리
-        string line;
-        while ((line = Console.ReadLine()) != null && line != "")
+        //두번째 줄부터 명령어 입력 및 처리
+        //명령어 종료 조건은 모든 접시가 세척이 되었을 때 이다.
+        //s3의 카운트가 N이 될때 까지 반복하거나, 수행개수의 합이 N*2인 경우까지 반복하거나
+        //아니면 더이상의 입력이 없을 때나 (되긴함)
+        //수행 개수의 합이 N*2일 때 까지 반복하는 것은, 
+        //모든 입력에 실수가 없어야 가능함을 알아두자.
+        for(int sum = 0; sum < N*2;)
         {
-            string[] parts = line.Split();
+            string[] parts = sr.ReadLine().Split();
             int x = int.Parse(parts[0]); //명령어
             int y = int.Parse(parts[1]); //수행 개수
-
+            sum += y;
             if (x == 1) // 세척 명령어
             {
                 while (y-- > 0)
                 {
-                    s2.Push(s1.Pop());
+                    s2.Push(s1.Pop()); 
                 }
             }
             else if (x == 2) // 건조 명령어
@@ -67,7 +74,10 @@ class Program
         // 결과 출력
         while (s3.Count > 0)
         {
-            Console.WriteLine(s3.Pop());
+           sw.WriteLine(s3.Pop());
         }
+        sw.Flush();
+        sw.Close();
+        sr.Close();
     }
 }
