@@ -5,79 +5,69 @@ class Program
 {
     static void Main()
     {
-        // 문제: 5957 / 난이도: S5 / 제목: Cleaning the Dishes / 날짜: 240718
-        // 설명: Bessie와 Canmuu가 접시를 설거지하고, 말려야 합니다.
-        // 접시는 세 가지 상태가 있습니다: 씻기지 않은 상태, 씻어서 젖은 상태, 완전히 말린 상태
-        // 첫 줄에는 세척하고 건조해야 할 전체 접시의 개수 N이 주어집니다 (1 <= N <= 10,000).
-        // 그 다음 줄부터는 명령어와 처리할 접시 수가 주어집니다.
-        // 명령어 1 D는 Bessie가 접시 D개를 세척하는 것을 의미합니다.
-        // 명령어 2 D는 Canmuu가 접시 D개를 건조하는 것을 의미합니다.
-
-        // 입력 처리
-        // 첫 번째 줄에서 N 값을 읽습니다.
-        int N = int.Parse(Console.ReadLine());
-        
-        // 명령어를 저장할 리스트를 생성합니다.
-        List<(int command, int count)> commands = new List<(int, int)>();
-
-        // 입력을 한 줄씩 읽어가며 명령어와 접시 개수를 리스트에 추가합니다.
-        string line;
-        while ((line = Console.ReadLine()) != null)
-        {
-            string[] parts = line.Split();
-            int command = int.Parse(parts[0]);
-            int count = int.Parse(parts[1]);
-            commands.Add((command, count));
-        }
+        //bj5957 /s5 /Cleaning the Dishes
+        //영알못이라 자세한 문제 설명은 생략한다.
+        //첫번째 줄은 씻을 접시 개수고, 위에서부터 아래로 접시번호 1~N 으로 쌓여짐
+        //두번째 줄부터 씻기는지, 말리는지 여부(1or2) 그리고 개수를 공백으로 나눠서 입력받음
+        //그래서 깨끗하고 건조한 접시가 쌓이는 최종 순서(위에서 부터)는 뭘까?
+        //예시- 
+        //접시 3개를 씻기면 씻긴 접시칸에 3~1(3이 맨 위)
+        //접시 2개를 말리면 말린 접시칸에 2,3(2가 맨 위)
+        //접시 2개를 씻기면 씬긴 접시칸에 5,4,1
+        //접시 3개를 말리면 말린 접시칸에 1,4,5,2,3(1이 맨 위)
+        //말린 접시칸은 스택이 아니라 뭐 문자로 담았다가 거꾸로 하든 상관없겠지만
+        //그냥 스택 3개를 쓰는 게 가장 명시적이어서 이렇게 짰습니다. 
+        //그리고 아마도 문제에서는 일부러 틀린 케이스가 나오지 않는다고 가정하는 거 같다.
+        //그래서 스택이 비어있는지 예외처리를 하지 않았습니다.
 
         // 스택 생성
-        // 더러운 접시를 저장할 스택입니다.
-        Stack<int> dirtyStack = new Stack<int>();
-        // 세척된 접시를 저장할 스택입니다.
-        Stack<int> washedStack = new Stack<int>();
-        // 건조된 접시를 저장할 스택입니다.
-        Stack<int> driedStack = new Stack<int>();
+        Stack<int> s1 = new Stack<int>(); //안씻긴 거
+        Stack<int> s2 = new Stack<int>(); //씻기고, 안말린거
+        Stack<int> s3 = new Stack<int>(); //씻기고, 말린거 
 
-        // 더러운 접시 스택을 초기화합니다 (N번 접시가 맨 아래, 1번 접시가 맨 위).
+        // 첫 줄에서 N 값을 읽음
+        int N = int.Parse(Console.ReadLine());
+
+        // 더러운 접시 스택 초기화
         for (int i = N; i >= 1; i--)
         {
-            dirtyStack.Push(i);
+            s1.Push(i); //맨 위에는 1이 있게 된다.
         }
 
-        // 명령어 처리
-        foreach (var command in commands)
+        // 명령어 입력 및 처리
+        string line;
+        while ((line = Console.ReadLine()) != null && line != "")
         {
-            if (command.command == 1) // 세척 명령어인 경우
+            string[] parts = line.Split();
+            int x = int.Parse(parts[0]); //명령어
+            int y = int.Parse(parts[1]); //수행 개수
+
+            if (x == 1) // 세척 명령어
             {
-                // 지정된 수만큼 접시를 세척합니다.
-                for (int i = 0; i < command.count; i++)
+                while (y-- > 0)
                 {
-                    if (dirtyStack.Count > 0)
-                    {
-                        // 더러운 접시 스택에서 꺼내 세척된 접시 스택에 추가합니다.
-                        washedStack.Push(dirtyStack.Pop());
-                    }
+                    s2.Push(s1.Pop());
                 }
             }
-            else if (command.command == 2) // 건조 명령어인 경우
+            else if (x == 2) // 건조 명령어
             {
-                // 지정된 수만큼 접시를 건조합니다.
-                for (int i = 0; i < command.count; i++)
+                while (y-- > 0)
                 {
-                    if (washedStack.Count > 0)
-                    {
-                        // 세척된 접시 스택에서 꺼내 건조된 접시 스택에 추가합니다.
-                        driedStack.Push(washedStack.Pop());
-                    }
+                    s3.Push(s2.Pop());
                 }
+            }
+
+            // 모든 접시가 건조된 경우 루프 종료
+            if (s3.Count == N)
+            {
+                break;
             }
         }
 
         // 결과 출력
-        // 건조된 접시 스택에서 접시를 하나씩 꺼내어 출력합니다.
-        while (driedStack.Count > 0)
+        while (s3.Count > 0)
         {
-            Console.WriteLine(driedStack.Pop());
+            Console.WriteLine(s3.Pop());
         }
     }
 }
