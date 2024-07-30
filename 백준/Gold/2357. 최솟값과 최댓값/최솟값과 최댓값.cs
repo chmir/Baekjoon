@@ -73,8 +73,8 @@ class SegmentTree
     {
         // 입력과 출력을 위한 StreamReader와 StreamWriter 설정
         // 이는 입출력 속도를 향상시키기 위한 방법입니다.
-        using (StreamReader sr = new StreamReader(Console.OpenStandardInput()))
-        using (StreamWriter sw = new StreamWriter(Console.OpenStandardOutput()))
+        using (StreamReader sr = new StreamReader(new BufferedStream(Console.OpenStandardInput())))
+        using (StreamWriter sw = new StreamWriter(new BufferedStream(Console.OpenStandardOutput())))
         {
             // 첫 번째 줄 입력 처리
             var input = Array.ConvertAll(sr.ReadLine().Split(), int.Parse);
