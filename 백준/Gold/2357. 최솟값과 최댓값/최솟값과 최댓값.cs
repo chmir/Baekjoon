@@ -3,13 +3,15 @@ using System.Collections.Generic;
 
 class SegmentTree
 {
-    // N: 수열의 길이, M: 쿼리의 개수
-    static int N, M;
+    //bj2357 /g1 /최솟값과 최댓값 /240731
+    //2042번 문제처럼 범위의 값을 구할 수도 있지만, 응용을 한다면 이런 문제풀이도 되는듯
+
     // MAXN: 수열의 최대 길이
     const int MAXN = 100000;
     // arr: 입력받은 수열을 저장하는 배열
     static int[] arr = new int[MAXN + 1];
     // minTree, maxTree: 각각 최소값과 최대값을 저장하는 세그먼트 트리
+    // 배열이 아니라 리스트로도 구현이 가능함
     static List<int> minTree, maxTree;
 
     // 세그먼트 트리 초기화 함수
@@ -76,9 +78,10 @@ class SegmentTree
         using (StreamReader sr = new StreamReader(new BufferedStream(Console.OpenStandardInput())))
         using (StreamWriter sw = new StreamWriter(new BufferedStream(Console.OpenStandardOutput())))
         {
+            int N, M; // N: 수열의 길이, M: 쿼리의 개수
             // 첫 번째 줄 입력 처리
             var input = Array.ConvertAll(sr.ReadLine().Split(), int.Parse);
-            N = input[0]; // 수열의 크기
+            N = input[0]; // 수열의 길이
             M = input[1]; // 쿼리의 개수
 
             // 세그먼트 트리의 크기 계산
