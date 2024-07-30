@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 
 class SegmentTree
@@ -64,7 +65,12 @@ class SegmentTree
 
     static void Main(string[] args)
     {
-        var input = Console.ReadLine().Split().Select(long.Parse).ToArray();  // 첫 번째 줄 입력 받기
+        // 입력과 출력을 위한 StreamReader와 StreamWriter 설정
+        StreamReader sr = new StreamReader(new BufferedStream(Console.OpenStandardInput()));
+        StreamWriter sw = new StreamWriter(new BufferedStream(Console.OpenStandardOutput()));
+
+        // 첫 번째 줄 입력 받기
+        var input = Array.ConvertAll(sr.ReadLine().Split(), long.Parse);
         n = (int)input[0];  // 숫자의 개수
         m = (int)input[1];  // 수의 변경 횟수
         k = (int)input[2];  // 구간 합을 구하는 횟수
@@ -72,7 +78,7 @@ class SegmentTree
         num = new long[n];
         for (int i = 0; i < n; i++)
         {
-            num[i] = long.Parse(Console.ReadLine());  // 숫자 입력 받기
+            num[i] = long.Parse(sr.ReadLine());  // 숫자 입력 받기
         }
 
         seg_tree = new long[4 * n];  // 세그먼트 트리 배열 초기화
@@ -80,7 +86,7 @@ class SegmentTree
 
         for (int i = 0; i < m + k; i++)
         {
-            var query = Console.ReadLine().Split().Select(long.Parse).ToArray();  // 쿼리 입력 받기
+            var query = Array.ConvertAll(sr.ReadLine().Split(), long.Parse);  // 쿼리 입력 받기
             int a = (int)query[0];
             int b = (int)query[1];
             long c = query[2];
@@ -91,8 +97,9 @@ class SegmentTree
             else
             {
                 long s = FindTree(b - 1, (int)c - 1, 1, 0, n - 1);  // 구간 합 구하기
-                Console.WriteLine(s);  // 결과 출력
+                sw.WriteLine(s);  // 결과 출력
             }
         }
+        sw.Flush();  // 모든 출력을 플러시
     }
 }
