@@ -1,8 +1,6 @@
-
-
 class SUI_UZI__LISA
 {
-    //bj2309 /b1 /일곱난쟁이 /240813
+    //bj2309 /b1 /일곱난쟁이 /240814
     //7개의 수를 일일이 더해보며 알아내는 것 보다 
     //9개의 합을 미리 구해놓고,
     //그 중에서 2개의 수를 뺐을 때
@@ -29,6 +27,8 @@ class SUI_UZI__LISA
                 if (targetSum == (arr[i] + arr[j]))
                 {
                     //나머지 일곱난쟁이를 출력한다
+                    //난쟁이의 키는 자연수니까 arr[i], arr[j]를 0으로 두고 정렬하면 될듯
+                    /* 이전에 했던 방식
                     int[] result = new int[7];
                     int index = 0;
 
@@ -40,20 +40,20 @@ class SUI_UZI__LISA
                             result[index++] = arr[k];
                         }
                     }
+                    */
+
+                    arr[i] = arr[j] = 0;
 
                     // 오름차순으로 정렬
-                    Array.Sort(result);
+                    Array.Sort(arr);
 
                     // 정렬된 결과 출력
-                    foreach (var value in result)
-                    {
-                        Console.WriteLine(value);
-                    }
+                    for (int k = 2; k < arr.Length; k++)
+                        Console.WriteLine(arr[k]);
 
                     return; // 원하는 결과를 찾았으므로 프로그램 종료
-                }
-            }
-        }
-        
-    }
+                } //end if
+            } //end for j
+        } //end for i
+    } //end Main
 }
