@@ -1,13 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 class Program
 {
     static void Main()
     {
+        // 입력과 출력을 위한 StreamReader와 StreamWriter 설정
+        StreamReader sr = new StreamReader(new BufferedStream(Console.OpenStandardInput()));
+        StreamWriter sw = new StreamWriter(new BufferedStream(Console.OpenStandardOutput()));
+
         // 점의 개수 입력
-        int n = int.Parse(Console.ReadLine());
+        int n = int.Parse(sr.ReadLine());
 
         // 좌표를 저장할 리스트
         List<(long x, long y)> v = new List<(long x, long y)>();
@@ -15,7 +20,7 @@ class Program
         // n개의 점을 입력받아 리스트에 추가
         for (int i = 0; i < n; i++)
         {
-            var input = Console.ReadLine().Split().Select(long.Parse).ToArray();
+            var input = sr.ReadLine().Split().Select(long.Parse).ToArray();
             v.Add((input[0], input[1])); // (x, y) 형태로 추가
         }
 
@@ -49,6 +54,11 @@ class Program
         result += right - left;
 
         // 결과 출력
-        Console.WriteLine(result);
+        sw.WriteLine(result);
+
+        // StreamWriter 닫기
+        sw.Flush();
+        sw.Close();
+        sr.Close();
     }
 }
