@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
+//bj13334 /g2 /철로 /240908
 
-class Program
+class Night_Tempo__Destiny
 {
     static void Main()
     {
