@@ -20,7 +20,7 @@ class Program
         // n개의 점을 입력받아 리스트에 추가
         for (int i = 0; i < n; i++)
         {
-            var input = sr.ReadLine().Split().Select(long.Parse).ToArray();
+            var input = Array.ConvertAll(sr.ReadLine().Split(), int.Parse);
             v.Add((input[0], input[1])); // (x, y) 형태로 추가
         }
 
