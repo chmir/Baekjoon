@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
+//bj2170 /g5 /선긋기 /240908
 
-class Program
+class SAKURA_LEE__My_Heart_Baby
 {
     static void Main()
     {
