@@ -1,8 +1,8 @@
-//bj2467 /g5 /용액 /240917
+//bj2470 /g5 /두 용액 /240917
 //2467번과 다른 점은 용액의 값들이 정렬되어있지 않다는 것
 //그래서 정렬해줬습니다
 
-class Tim_Legend__soda_city_funk
+class SAINT_PEPSI__ENJOY_YOURSELF
 {
     static void Main()
     {
