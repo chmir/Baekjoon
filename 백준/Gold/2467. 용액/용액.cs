@@ -1,5 +1,6 @@
 //bj2467 /g5 /용액 /240917
 //투포인터문제
+//0에 가깝게 하려면 절댓값을 쓰면 됨
 
 class Tim_Legend__soda_city_funk
 {
@@ -44,17 +45,8 @@ class Tim_Legend__soda_city_funk
                     break;
                 }
             }
-            else if (absSum == minAbsSum)
-            {
-                // 합의 절댓값이 동일한 경우 합 자체가 더 작은 것을 선택
-                if (sum < minSum)
-                {
-                    minSum = sum;
-                    resultLeft = numbers[left];
-                    resultRight = numbers[right];
-                }
-            }
-
+            //else if (absSum == minAbsSum) //이 경우는 생각할 필요 없음
+            
             // 합이 0보다 작으면 left를 증가시켜 합을 증가시킴
             if (sum < 0)
             {
