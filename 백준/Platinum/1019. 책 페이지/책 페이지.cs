@@ -3,17 +3,17 @@
 
 class kissmenerdygirl__Hypnotic_Eyes
 {
-    static long[] counts = new long[10]; // 각 숫자(0~9)의 등장 횟수를 저장할 배열
+    static int[] counts = new int[10]; // 각 숫자(0~9)의 등장 횟수를 저장할 배열
 
     static void Main()
     {
         // N 입력 받기
-        long N = long.Parse(Console.ReadLine());
+        int N = int.Parse(Console.ReadLine());
 
         // 페이지 번호 범위 설정
-        long start = 1;
-        long end = N;
-        long digit = 1; // 현재 자리수 (일의 자리부터 시작)
+        int start = 1;
+        int end = N;
+        int digit = 1; // 현재 자리수 (일의 자리부터 시작)
 
         while (start <= end)
         {
@@ -35,7 +35,7 @@ class kissmenerdygirl__Hypnotic_Eyes
             }
 
             // 10의 배수 구간에서 각 숫자의 등장 횟수 누적
-            long count = (end / 10 - start / 10 + 1);
+            int count = (end / 10 - start / 10 + 1);
             for (int i = 0; i < 10; i++)
             {
                 counts[i] += count * digit;
@@ -55,7 +55,7 @@ class kissmenerdygirl__Hypnotic_Eyes
     }
 
     // 주어진 숫자 num에서 각 자리수의 등장 횟수를 counts 배열에 누적
-    static void CountDigits(long num, long digit)
+    static void CountDigits(int num, int digit)
     {
         while (num > 0)
         {
