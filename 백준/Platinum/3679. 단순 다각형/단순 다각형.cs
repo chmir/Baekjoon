@@ -1,129 +1,124 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 public class Program
 {
-    // Point 구조체: 점의 좌표와 입력 순서를 저장합니다.
-    public struct Point : IComparable<Point>
+    // 점(Point)을 나타내는 구조체입니다.
+    struct Point
     {
-        public int x;   // x좌표
-        public int y;   // y좌표
-        public int id;  // 입력된 순서 (인덱스)
+        public int x, y;    // 점의 x, y 좌표
+        public int index;   // 입력된 순서 (인덱스)
 
-        // 생성자: x, y 좌표와 id를 설정합니다.
-        public Point(int x, int y, int id)
+        // 생성자: 점의 인덱스와 좌표를 초기화합니다.
+        public Point(int idx, int xPos, int yPos)
         {
-            this.x = x;
-            this.y = y;
-            this.id = id;
-        }
-
-        // IComparable 인터페이스 구현: 점들을 비교할 때 사용됩니다.
-        // y좌표가 작을수록, y좌표가 같다면 x좌표가 작을수록 앞에 옵니다.
-        public int CompareTo(Point other)
-        {
-            if (this.y != other.y)
-                return this.y.CompareTo(other.y);
-            if (this.x != other.x)
-                return this.x.CompareTo(other.x);
-            return this.id.CompareTo(other.id);
+            index = idx;
+            x = xPos;
+            y = yPos;
         }
     }
 
-    // ccw 함수: 세 점의 방향을 판단합니다.
-    // 반환값이 1이면 반시계 방향, -1이면 시계 방향, 0이면 일직선상에 있습니다.
-    static int ccw(Point a, Point b, Point c)
+    // 세 점 a, b, c에 대해 CCW(Counter Clock Wise)를 계산합니다.
+    // 반환값이 양수이면 반시계 방향, 음수이면 시계 방향, 0이면 일직선상에 있습니다.
+    static int CCW(Point a, Point b, Point c)
     {
-        // 외적 계산을 통해 방향성을 구합니다.
-        long t = (long)(b.x - a.x) * (c.y - b.y) - (long)(c.x - b.x) * (b.y - a.y);
-        if (t > 0) return 1;    // 반시계 방향
-        if (t < 0) return -1;   // 시계 방향
-        return 0;               // 일직선상
+        // 외적(cross product)을 사용하여 세 점의 방향성을 판단합니다.
+        long cross = (long)(b.x - a.x) * (c.y - a.y) - (long)(b.y - a.y) * (c.x - a.x);
+        if (cross > 0) return 1;    // 반시계 방향
+        if (cross < 0) return -1;   // 시계 방향
+        return 0;                   // 일직선상에 있음
     }
 
-    // dist 함수: 두 점 사이의 거리의 제곱을 계산합니다.
-    static long dist(Point a, Point b)
+    // 두 점을 비교하는 함수입니다.
+    // 기준점 pivot에 대하여 각 점 a, b를 비교합니다.
+    static bool Compare(Point a, Point b, Point pivot)
     {
-        long dx = (long)(a.x - b.x);
-        long dy = (long)(a.y - b.y);
-        return dx * dx + dy * dy;   // 거리의 제곱을 반환
+        int ccwResult = CCW(pivot, a, b);   // CCW 값을 계산하여 방향성을 판단합니다.
+        if (ccwResult != 0)
+            return ccwResult > 0;   // CCW > 0이면 a가 b보다 먼저 옵니다.
+        // CCW 값이 0이면(일직선상에 있으면) 거리 비교를 합니다.
+        long distA = (long)(a.x - pivot.x) * (a.x - pivot.x) + (long)(a.y - pivot.y) * (a.y - pivot.y);
+        long distB = (long)(b.x - pivot.x) * (b.x - pivot.x) + (long)(b.y - pivot.y) * (b.y - pivot.y);
+        if (distA != distB)
+            return distA < distB;   // 거리가 짧은 점이 먼저 옵니다.
+        return a.index < b.index;   // 거리도 같으면 입력된 순서가 빠른 점이 먼저 옵니다.
     }
 
     public static void Main()
     {
-        // 테스트 케이스의 수를 입력받습니다.
-        int T = int.Parse(Console.ReadLine());
+        int T = int.Parse(Console.ReadLine());  // 테스트 케이스의 수를 입력받습니다.
+        StringBuilder sb = new StringBuilder(); // 결과를 저장할 StringBuilder를 생성합니다.
 
-        // 각 테스트 케이스에 대해 반복합니다.
         while (T-- > 0)
         {
-            // 한 줄의 입력을 받아 공백으로 분리합니다.
-            string[] input = Console.ReadLine().Split();
-            int N = int.Parse(input[0]);  // 점의 개수
+            string[] input = Console.ReadLine().Split();   // 한 줄의 입력을 공백으로 분리합니다.
+            int N = int.Parse(input[0]);   // 점의 개수를 읽어옵니다.
+            Point[] points = new Point[N]; // 점들을 저장할 배열을 생성합니다.
+            Point pivot = new Point(-1, int.MaxValue, int.MaxValue);  // 기준점(pivot)을 초기화합니다.
+            int pivotIndex = -1;   // 기준점의 인덱스를 저장할 변수입니다.
 
-            // 점들을 저장할 리스트를 생성합니다.
-            List<Point> points = new List<Point>();
-
-            // 입력된 좌표들을 처리하여 points 리스트에 저장합니다.
+            // 모든 점들을 입력받아 배열에 저장합니다.
             for (int i = 0; i < N; i++)
             {
-                int x = int.Parse(input[1 + i * 2]);        // x좌표
-                int y = int.Parse(input[1 + i * 2 + 1]);    // y좌표
-                points.Add(new Point(x, y, i));             // Point 객체 생성 후 추가
-            }
+                int x = int.Parse(input[1 + i * 2]);       // x 좌표
+                int y = int.Parse(input[1 + i * 2 + 1]);   // y 좌표
+                points[i] = new Point(i, x, y);            // 점을 생성하여 배열에 저장
 
-            // 가장 작은 점(기준점)을 첫 번째로 이동합니다.
-            int minIndex = 0;   // 최소값의 인덱스 초기화
-            for (int i = 1; i < N; i++)
-            {
-                // CompareTo 메서드를 사용하여 더 작은 점을 찾습니다.
-                if (points[i].CompareTo(points[minIndex]) < 0)
+                // 기준점(pivot)을 찾습니다.
+                // y 좌표가 가장 작고, y 좌표가 같다면 x 좌표가 가장 작은 점을 선택합니다.
+                if (pivot.y > y || (pivot.y == y && pivot.x > x))
                 {
-                    minIndex = i;   // 현재 점이 더 작으면 minIndex 갱신
+                    pivot = new Point(i, x, y);    // 새로운 기준점으로 설정
+                    pivotIndex = i;                // 기준점의 인덱스 저장
                 }
             }
 
-            // 기준점을 첫 번째 위치로 이동시킵니다.
+            // 기준점을 첫 번째로 이동시킵니다.
             Point temp = points[0];
-            points[0] = points[minIndex];
-            points[minIndex] = temp;
+            points[0] = points[pivotIndex];
+            points[pivotIndex] = temp;
 
-            Point basePoint = points[0];  // 기준점 설정
+            Point basePoint = points[0];   // 기준점을 basePoint로 설정합니다.
 
             // 기준점을 제외한 나머지 점들을 정렬합니다.
             // 정렬 기준:
-            // 1. 기준점과의 ccw 값이 양수인 점이 먼저 옴 (반시계 방향)
-            // 2. ccw 값이 0이면 기준점과의 거리가 가까운 점이 먼저 옴
-            // 3. 거리도 같으면 입력된 순서(id)가 작은 점이 먼저 옴
-            points.Sort(1, N - 1, Comparer<Point>.Create((a, b) =>
+            // 1. CCW 값이 양수인 순서 (반시계 방향으로 정렬)
+            // 2. CCW 값이 0이면 기준점과의 거리의 제곱이 작은 순서
+            // 3. 거리도 같으면 입력된 순서(index)가 작은 순서
+            Array.Sort(points, 1, N - 1, Comparer<Point>.Create((a, b) =>
             {
-                int ccwResult = ccw(basePoint, a, b);   // ccw 값을 계산
+                int ccwResult = CCW(basePoint, a, b);  // CCW 값을 계산
                 if (ccwResult != 0)
-                    return -ccwResult;  // ccwResult > 0이면 a가 먼저 옴
-                long distA = dist(basePoint, a);    // 기준점과 a의 거리 제곱
-                long distB = dist(basePoint, b);    // 기준점과 b의 거리 제곱
+                    return -ccwResult; // CCW > 0이면 a가 먼저 오도록 (-ccwResult 사용)
+                long distA = (long)(a.x - basePoint.x) * (a.x - basePoint.x) + (long)(a.y - basePoint.y) * (a.y - basePoint.y);
+                long distB = (long)(b.x - basePoint.x) * (b.x - basePoint.x) + (long)(b.y - basePoint.y) * (b.y - basePoint.y);
                 if (distA != distB)
-                    return distA.CompareTo(distB);  // 거리가 가까운 순으로 정렬
-                return a.id.CompareTo(b.id);        // 거리도 같으면 id 순으로 정렬
+                    return distA.CompareTo(distB); // 거리의 제곱이 작은 순서로 정렬
+                return a.index.CompareTo(b.index); // 입력된 순서(index)가 작은 순서로 정렬
             }));
 
-            // 일직선상에 있는 끝부분의 점들을 뒤집습니다.
-            // 이는 반시계 방향 정렬에서 일직선상에 있는 점들의 순서를 올바르게 하기 위함입니다.
-            int idx = N - 1;    // 마지막 인덱스부터 시작
-            while (idx > 1 && ccw(basePoint, points[idx - 1], points[idx]) == 0)
-                idx--;  // 일직선상에 있는 점들의 시작 인덱스를 찾음
+            // 일직선상에 있는 끝부분 점들을 뒤집습니다.
+            // 이는 동일한 각도(즉, CCW 값이 0)인 점들의 순서를 올바르게 하기 위함입니다.
+            int l;
+            for (l = N - 2; l > 0; l--)
+                if (CCW(basePoint, points[l], points[N - 1]) != 0)
+                    break;  // CCW 값이 0이 아닌 지점을 찾습니다.
+            l++;
 
-            // 일직선상에 있는 점들의 부분을 뒤집습니다.
-            points.Reverse(idx, N - idx);
+            // 일직선상에 있는 점들의 순서를 뒤집습니다.
+            Array.Reverse(points, l, N - l);
 
             // 결과를 출력합니다.
             for (int i = 0; i < N; i++)
             {
-                Console.Write(points[i].id);    // 각 점의 입력 순서(id)를 출력
+                sb.Append(points[i].index);    // 각 점의 index(입력된 순서)를 추가
                 if (i != N - 1)
-                    Console.Write(" ");         // 마지막이 아니면 공백 추가
+                    sb.Append(" ");            // 마지막이 아니면 공백 추가
             }
-            Console.WriteLine();                // 각 테스트 케이스마다 줄 바꿈
+            sb.AppendLine();   // 각 테스트 케이스마다 줄바꿈 추가
         }
+
+        Console.Write(sb.ToString());  // 최종 결과를 한 번에 출력합니다.
     }
 }
