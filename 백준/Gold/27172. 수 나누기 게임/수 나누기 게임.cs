@@ -53,7 +53,7 @@ class Macross_82_99__Now_And_Forever
             sb.Append(score[card[i]] + " ");
 
         // 출력
-        sw.Write(sb.ToString().Trim());
+        sw.Write(sb.ToString());
         sw.Close();
         sr.Close();
     }
