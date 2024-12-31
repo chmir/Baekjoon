@@ -1,12 +1,10 @@
 //bj13334 /g2 /철로 /240908
-
 class Night_Tempo__Destiny
 {
     static void Main()
     {
         // 사람 수 입력 받기
         int people_num = int.Parse(Console.ReadLine());
-
         // 좌표를 저장할 리스트
         var arr = new List<(int first, int second)>();
 
@@ -62,7 +60,6 @@ class Night_Tempo__Destiny
                 max_result = Math.Max(max_result, include_cnt);
             }
         }
-
         // 결과 출력
         Console.WriteLine(max_result);
     }
